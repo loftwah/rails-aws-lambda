@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+echo '== Building containers =='
+
+if [ "$(uname -s)" = "Darwin" ]; then
+  HOST_UID="0"
+  HOST_GID="0"
+fi
+docker-compose build \
+  --build-arg HOST_UID="${HOST_UID:=$(id -u)}" \
+  --build-arg HOST_GID="${HOST_GID:=$(id -g)}"
+
+docker-compose run \
+  loftwah-rails-lambda \
+  ./bin/_bootstrap
